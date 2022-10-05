@@ -1,0 +1,1 @@
+Project with homeworks for EPAM Python&TestAutomation_Oct'22
