@@ -93,7 +93,3 @@ def check_data(filepath: str, validators: Iterable[Callable]) -> str:
                     break
 
     return RESULT_FILE_NAME
-
-
-if __name__ == "__main__":
-    check_data("data.txt", [validate_date, validate_line])
