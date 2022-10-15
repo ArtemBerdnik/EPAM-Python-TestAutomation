@@ -27,9 +27,9 @@ assert = custom_range(string.ascii_lowercase, 'p', 'g', -2) == ['p', 'n', 'l', '
 from typing import Sequence
 
 
-def custom_range(seq: Sequence[str], end=-1, start=0, step=1) -> list:
-    if all([isinstance(end, str), isinstance(start, str)]):
-        return list(seq[seq.index(end):seq.index(start):step])
-    if all([isinstance(end, str), isinstance(start, int), isinstance(step, int)]):
-        return list(seq[:seq.index(end):])
-    return list(seq[start:end:step])
+def custom_range(seq: Sequence[str], *args) -> list:
+    if len(args) == 1:
+        return list(seq[:seq.index(args[0]):1])
+    if len(args) == 2:
+        return list(seq[seq.index(args[0]):seq.index(args[1]):1])
+    return list(seq[seq.index(args[0]):seq.index(args[1]):args[2]])

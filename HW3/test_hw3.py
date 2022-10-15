@@ -1,5 +1,5 @@
 import string
-
+import inspect
 import pytest
 
 from hw3 import custom_range
@@ -26,3 +26,8 @@ def test_positional_only():
     with pytest.raises(TypeError) as err:
         _ = custom_range("abc", start="a", stop="b", step=1)
     assert "got an unexpected keyword argument" in str(err.value)
+
+
+def test_positional_only_2():
+    for _, kw in inspect.signature(custom_range).parameters.items():
+        assert kw.default == inspect.Parameter.empty
