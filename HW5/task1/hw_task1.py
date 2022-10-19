@@ -12,8 +12,3 @@ class KeyValueStorage:
 
     def __getitem__(self, attr):
         return self.__dict__[attr]
-
-
-if __name__ == "__main__":
-    aaa = KeyValueStorage('/Users/Artem_Berdnik/PycharmProjects/EPAM-Python-TestAutomation/HW5/task1/task1.txt')
-    print()
