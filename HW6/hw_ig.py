@@ -35,8 +35,7 @@ def merge_elems(*elems) -> Iterator:
 
     for element in elems:
         merge_sub_elements(element)
-
-    return results
+    yield results
 
 
 # 2. Implement a map-like function that returns an iterator 
@@ -68,4 +67,4 @@ def map_like(fun, *elems) -> Iterator:
             result.append(fun(element))
         except TypeError as e:
             result.append(f"{element}: {str(e)}")
-    return result
+    yield result
