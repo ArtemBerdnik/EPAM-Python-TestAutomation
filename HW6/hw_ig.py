@@ -17,25 +17,18 @@ from collections.abc import Iterable
 
 
 def merge_elems(*elems) -> Iterator:
-    results = []
-
-    def merge_sub_elements(sub_element):
-        if isinstance(sub_element, Iterable):
-            for obj_ in sub_element:
-                if isinstance(obj_, str):
-                    results.extend(sub_element)
-                    break
-                if isinstance(obj_, Iterable) and not isinstance(obj_, str):
-                    merge_sub_elements(obj_)
-                else:
-                    results.extend(sub_element)
-                    break
-        else:
-            results.append(sub_element)
-
     for element in elems:
-        merge_sub_elements(element)
-    yield results
+        if isinstance(element, Iterable):
+            for obj_ in element:
+                if isinstance(obj_, str):
+                    for char in obj_:
+                        yield char
+                elif isinstance(obj_, Iterable) and not isinstance(obj_, str):
+                    yield from merge_elems(obj_)
+                else:
+                    yield obj_
+        else:
+            yield element
 
 
 # 2. Implement a map-like function that returns an iterator 
@@ -61,10 +54,8 @@ def merge_elems(*elems) -> Iterator:
 # True: 'bool' object is not subscriptable
 
 def map_like(fun, *elems) -> Iterator:
-    result = []
     for element in elems:
         try:
-            result.append(fun(element))
+            yield fun(element)
         except TypeError as e:
-            result.append(f"{element}: {str(e)}")
-    yield result
+            yield f"{element}: {str(e)}"

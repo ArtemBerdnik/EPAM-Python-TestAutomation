@@ -12,7 +12,9 @@ from hw_ig import merge_elems, map_like
 )])
 def test_arguments_flattener(a, b, c, d):
     assert isinstance(merge_elems(a, b, c, d), Generator)
-    assert next(merge_elems(a, b, c, d)) == [1, 2, 3, 6, 'z', 'h', 'a', 'b', 'a', 1, 2, 3, 4]
+    gen = merge_elems(a, b, c, d)
+    for char in [1, 2, 3, 6, 'z', 'h', 'a', 'b', 'a', 1, 2, 3, 4]:
+        assert next(gen) == char
 
 
 @pytest.mark.parametrize("fun,a,b,c,d", [(
@@ -24,5 +26,6 @@ def test_arguments_flattener(a, b, c, d):
 )])
 def test_map_like_flattener(fun, a, b, c, d):
     assert isinstance(map_like(fun, a, b, c, d), Generator)
-    assert next(map_like(fun, a, b, c, d)) == \
-           [1, "6: 'int' object is not subscriptable", 'z', "True: 'bool' object is not subscriptable"]
+    gen = map_like(fun, a, b, c, d)
+    for char in [1, "6: 'int' object is not subscriptable", 'z', "True: 'bool' object is not subscriptable"]:
+        assert next(gen) == char
