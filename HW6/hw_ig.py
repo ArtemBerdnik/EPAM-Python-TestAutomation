@@ -19,17 +19,12 @@ from collections.abc import Iterable
 def merge_elems(*elems) -> Iterator:
     for element in elems:
         if isinstance(element, Iterable):
-            for obj_ in element:
-                if isinstance(obj_, str):
-                    for char in obj_:
-                        yield char
-                elif isinstance(obj_, Iterable) and not isinstance(obj_, str):
-                    yield from merge_elems(obj_)
-                else:
-                    yield obj_
+            try:
+                yield from [item for sublist in element for item in sublist]
+            except TypeError:
+                yield from [item for item in element]
         else:
             yield element
-
 
 # 2. Implement a map-like function that returns an iterator 
 # (extra functionality: if arg function can't be applied, return element as is + text exception)
