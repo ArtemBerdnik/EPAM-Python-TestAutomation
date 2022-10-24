@@ -1,10 +1,10 @@
 import pytest
-from hw_task2 import TableData
+from hw_task2 import TableData, get_cursor_in_db
 
 
 @pytest.fixture
 def get_db_details():
-    database_name = 'HW5/task2/example.sqlite'
+    database_name = 'example.sqlite'
     table_name = 'presidents'
     return (
         database_name,
@@ -14,7 +14,7 @@ def get_db_details():
 
 @pytest.fixture
 def get_db_details_with_updates():
-    database_name = 'HW5/task2/example.sqlite'
+    database_name = 'example.sqlite'
     table_name = 'presidents'
     president_name = 'Test_President'
     president_age = 18
@@ -55,9 +55,11 @@ def test_updates_in_db(get_db_details_with_updates):
 
     amount_of_entries_in_db = len(presidents)
 
-    TableData.update_data_in_table(president_name, president_age, president_country)
+    with get_cursor_in_db(database_name) as cursor:
+        cursor.execute(f"insert into presidents values ('{president_name}', {president_age}, '{president_country}')")
 
     assert len(presidents) == amount_of_entries_in_db + 1
     assert president_name in presidents
 
-    TableData.delete_data_in_table("presidents", "name", president_name)
+    with get_cursor_in_db(database_name) as cursor:
+        cursor.execute(f"DELETE FROM {table_name} where name = '{president_name}'")

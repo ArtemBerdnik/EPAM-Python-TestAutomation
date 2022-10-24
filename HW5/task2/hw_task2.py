@@ -1,20 +1,29 @@
+import contextlib
 import sqlite3
 
 
+@contextlib.contextmanager
+def get_cursor_in_db(db):
+    conn = sqlite3.connect(db)
+    try:
+        yield conn.cursor()
+    finally:
+        conn.commit()
+        conn.close()
+
+
 class TableData:
+    presidents_data = set()
+
     def __init__(self, database_name, table_name):
-        print("Initiate a new TableData object")
-        print(f"Connecting to {database_name}")
-        print(f"Trying to fetch data from {table_name}")
-        conn = sqlite3.connect(database_name)
-        cursor = conn.cursor()
-        cursor.execute(f'SELECT * from {table_name}')
+        with get_cursor_in_db(database_name) as cursor:
+            cursor.execute(f'SELECT * from {table_name}')
+            for entry in cursor:
+                self.presidents_data.add(entry)
         self.database_name = database_name
         self.table_name = table_name
-        self.presidents_data = cursor.fetchall()
         self.presidents_names = [pres[0] for pres in self.presidents_data]
         self.len_ = len(self.presidents_names)
-        conn.close()
 
     def __iter__(self):
         self.__init__(self.database_name, self.table_name)
@@ -41,19 +50,3 @@ class TableData:
         print(f"Checking if a TableData object contains '{item}'")
         self.__init__(self.database_name, self.table_name)
         return item in self.presidents_names
-
-    @staticmethod
-    def update_data_in_table(president_name: str, age_of_president: int, country: str) -> None:
-        conn = sqlite3.connect('HW5/task2/example.sqlite')
-        cursor = conn.cursor()
-        cursor.execute(f"insert into presidents values ('{president_name}', {age_of_president}, '{country}')")
-        conn.commit()
-        conn.close()
-
-    @staticmethod
-    def delete_data_in_table(table_name: str, field: str, field_value: str) -> None:
-        conn = sqlite3.connect('HW5/task2/example.sqlite')
-        cursor = conn.cursor()
-        cursor.execute(f"DELETE FROM {table_name} where {field} = '{field_value}'")
-        conn.commit()
-        conn.close()
