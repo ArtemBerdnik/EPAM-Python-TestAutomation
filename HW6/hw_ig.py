@@ -1,6 +1,7 @@
 from collections.abc import Iterator
 from collections.abc import Iterable
 
+
 # 1. Implement a function that flatten incoming data (non-iterables and elements from iterables)
 # and returns an iterator
 
@@ -18,15 +19,19 @@ from collections.abc import Iterable
 
 def merge_elems(*elems) -> Iterator:
     for element in elems:
-        if isinstance(element, Iterable):
-            try:
-                yield from [item for sublist in element for item in sublist]
-            except TypeError:
-                yield from [item for item in element]
+        if isinstance(element, Iterable) and not isinstance(element, str):
+            for sub_element in element:
+                if isinstance(sub_element, Iterable):
+                    yield from merge_elems(sub_element)
+                else:
+                    yield from [item for item in element]
+                    break
+        elif isinstance(element, str):
+            yield from [item for item in element]
         else:
             yield element
 
-# 2. Implement a map-like function that returns an iterator 
+# 2. Implement a map-like function that returns an iterator
 # (extra functionality: if arg function can't be applied, return element as is + text exception)
 #
 # def map_like(fun, *elems):
