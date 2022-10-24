@@ -12,7 +12,7 @@ def test_positional_only(data_):
 
 
 @pytest.mark.parametrize("data_", ["task1_negative.txt"])
-def test_positional_only(data_):
+def test_positional_only_negative(data_):
     with pytest.raises(ValueError) as err:
         _ = KeyValueStorage(data_)
     assert "int value can not be a key in dict" in str(err.value)
