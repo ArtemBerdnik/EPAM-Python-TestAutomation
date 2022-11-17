@@ -12,6 +12,7 @@ MONITORS_BUTTON = "//a[text()='Monitors']"
 CART_BUTTON = "id:cartur"
 
 ### Monitors content ###
+TABLE_WITH_MONITORS = "#tbodyid"
 ALL_MONITORS = "//div[@id='tbodyid']//div[@class='col-lg-4 col-md-6 mb-4']"
 PRODUCT_PRICE = "//h5"
 PRODUCT_NAME = "//a[@class='hrefch']"

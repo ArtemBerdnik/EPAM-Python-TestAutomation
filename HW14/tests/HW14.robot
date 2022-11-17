@@ -4,6 +4,8 @@ Library     SeleniumLibrary
 Library     ../libraries/pageobjects/MonitorsPage.py
 Library     ../libraries/pageobjects/CartPage.py
 Variables   ../libraries/variables.py
+Test Setup      Login with valid credentials    ${USERNAME}     ${PASSWORD}
+Test Teardown       Close All Browsers
 
 *** Variables ***
 ${URL}  https://www.demoblaze.com/
@@ -12,21 +14,17 @@ ${PASSWORD}     ArtemB
 
 *** Test Cases ***
 hw_part_1
-    Open Browser    ${URL}   chrome
-    Login with valid credentials    ${USERNAME}     ${PASSWORD}
     Element Should Be Visible   ${LOGOUT_BUTTON}
     Element Text Should Be  ${WELCOME_MESSAGE_TEST}  Welcome ${USERNAME}
 
 hw_part_2
-    Open Browser    ${URL}   chrome
-    Login with valid credentials    ${USERNAME}     ${PASSWORD}
     Click Element   ${MONITORS_BUTTON}
-    BuiltIn.Sleep   2
+    MonitorsPage.Wait Until Page Fully Loaded
     ${MOST_EXPENCIVE_MONITOR}=     MonitorsPage.Find The Most Expensive Monitor
-    Click Element   ${MOST_EXPENCIVE_MONITOR}[0]
+    Click Element   ${MOST_EXPENCIVE_MONITOR}['web_element']
     Wait Until Element Is Visible   ${PRODUCT_NAME_ON_PRODUCT_PAGE}
-    Title should be correct in product page     ${MOST_EXPENCIVE_MONITOR}[1]
-    Price should be correct in product page     $${MOST_EXPENCIVE_MONITOR}[2] *includes tax
+    Title should be correct in product page     ${MOST_EXPENCIVE_MONITOR}['monitor_name']
+    Price should be correct in product page     $${MOST_EXPENCIVE_MONITOR}['monitor_price'] *includes tax
     Click Element    ${ADD_TO_CARD_BUTTON}
     Alert Should Be Present     Product added.
     Click Element    ${CART_BUTTON}
@@ -39,10 +37,11 @@ hw_part_2
 Login with valid credentials
     [Documentation]     uses valid credentials to log in
     [Arguments]     ${valid_username}     ${valid_password}
+    Open Browser    ${URL}   chrome
     Click Element   ${LOGIN_BUTTON}
     Wait Until Element Is Visible   ${LOGIN_POPUP}
     Element Should Be Visible   ${LOGIN_POPUP}
-    BuiltIn.Sleep   1
+    Wait Until Element Is Visible   ${USERNAME_INPUT_FIELD}
     Input Text  ${USERNAME_INPUT_FIELD}    ${valid_username}
     Input Password  ${PASSWORD_INPUT_FIELD}    ${valid_password}
     Click Element   ${LOGIN_BUTTON_IN_LOGIN_POPUP}
