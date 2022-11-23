@@ -15,9 +15,9 @@ def browser():
 
 @pytest.fixture()
 def get_main_page_after_login(browser):
-    yield MainPage(browser)\
-        .open_page()\
-        .click_login_button()\
-        .login()
+    main_page = MainPage(browser).open_page()
+    main_page.click_login_button()
+    main_page.login()
+    yield main_page
 
 
